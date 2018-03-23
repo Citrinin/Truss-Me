@@ -34,12 +34,10 @@ namespace TrussMe.Model.Repositories
             {
                 if (addTruss.UnitForce)
                 {
-                    // MessageBox.Show("No such truss in DB! Unit force will change to Actual force. Enter values manually");
                     addTruss.UnitForce = false;
                 }
 
                 _trussContext.Truss.Add(addTruss);
-                //context.SaveChanges();
                 for (var i = 1; i <= addTruss.PanelAmount / 2; i++)
                 {
 
@@ -95,7 +93,6 @@ namespace TrussMe.Model.Repositories
             }
             else
             {
-                //item = Mapper.Map<Entities.Truss>(searchTruss);
                 item.Bar = new ObservableCollection<Bar>(searchTruss.Bar.Select(Mapper.Map<Bar>));
                 item.TrussId = searchTruss.TrussId;
             }

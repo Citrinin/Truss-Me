@@ -67,7 +67,6 @@ namespace TrussMe.Model.Repositories
                            select bar;
                 _trussContext.Bar.RemoveRange(bars.ToList());
             }
-            //_trussContext.Truss.RemoveRange(trussestoDelete);
             _trussContext.ProjectTruss.RemoveRange(prTrusstoDelete);
             _trussContext.Truss.RemoveRange(trussestoDelete);
             _trussContext.Project.Remove(_trussContext.Project.First(pr=>pr.ProjectId==itemToDelete.ProjectId));

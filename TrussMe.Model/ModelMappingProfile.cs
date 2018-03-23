@@ -46,38 +46,6 @@ namespace TrussMe.Model
                         cfg.CreateMap<TypeOfLoadDA, TypeOfLoad>();
                     }
             );
-
-
-
-                //.ForMember(pt=>pt.Truss,opt => opt.ResolveUsing((projectTrussesDataAccess, projectTrusses, i, context) => context.Mapper.Map<Truss>(projectTrussesDataAccess.Truss)))
-                //.ForMember(pt=>pt.Project, opt=> opt.MapFrom(ptDA=>ptDA.Project));
-
-
-
-
-
-                //   // .ForMember("LoadType", opt => opt.MapFrom(c => trussContext.TypeOfLoad.First(lt => lt.LoadId == c.LoadId).LoadType));
-                //this.CreateMap<Truss, TrussDA>()
-                //    .ForMember(truss => truss.ProjectTruss, opt => opt.Ignore())
-                //    .ForMember(truss => truss.TypeOfLoad, opt => opt.Ignore());
-
-
-                //this.CreateMap<BarDA, Bar>()
-                //    .ForMember("ElementType", opt => opt.MapFrom(c => trussContext.TrussElement.First(trEl => trEl.ElementId == c.ElementId).ShortName));
-                //this.CreateMap<Bar, BarDA>();
-                //this.CreateMap<SectionDA, Section>();
-                //this.CreateMap<Section, SectionDA>();
-                //this.CreateMap<SteelDA, Steel>();
-                //this.CreateMap<Steel, SteelDA>();
-                //this.CreateMap<TrussElementDA, BarTemplate>();
-                //this.CreateMap<ProjectTrussesDA, ProjectTruss>()
-                //    ////???
-                //    .ForMember("Truss", opt => opt.MapFrom(c => Mapper.Map<Truss>(c.Truss)));
-                //this.CreateMap<ProjectTruss, ProjectTrussesDA>();
-                //this.CreateMap<TypeOfLoad, TypeOfLoadDA>();
-                //this.CreateMap<TypeOfLoadDA, TypeOfLoad>();
-
         }
-
     }
 }
