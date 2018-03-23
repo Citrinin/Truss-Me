@@ -1,0 +1,98 @@
+﻿<Window x:Class="TrussMe.WPF.Dialogs.AddTrussDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TrussMe.WPF.Dialogs"
+        xmlns:userControls="clr-namespace:TrussMe.WPF.UserControls"
+        mc:Ignorable="d"
+    Title="AddTrussDialog" Height="365" Width="650">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="7*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical">
+            <WrapPanel Orientation="Horizontal">
+                <Label Width="100">Name</Label>
+                <TextBox Text="{Binding NewProjectTruss.TrussName}" 
+                         Margin="0,4" 
+                         x:Name="TextBoxName" 
+                         Width="100">
+                </TextBox>
+            </WrapPanel>
+            <WrapPanel>
+                <Label Width="100">Span</Label>
+                <TextBox  Width="100" 
+                          Text="{Binding ElementName=FavTruss, Path=Span, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                          LostFocus="TextBox_OnLostFocus" 
+                          Margin="0,4">
+                </TextBox>
+            </WrapPanel>
+            <WrapPanel>
+                <Label Width="100">Slope</Label>
+                <TextBox Width="100" 
+                         Text="{Binding ElementName=FavTruss, Path=Slope, UpdateSourceTrigger=PropertyChanged , Mode=TwoWay, StringFormat= {}{0:0.000}}" 
+                         LostFocus="TextBox_OnLostFocus" 
+                         Margin="0,4"/>
+            </WrapPanel>
+            <WrapPanel>
+                <Label Width="100">Height</Label>
+                <TextBox Width="100" 
+                         Text="{Binding ElementName=FavTruss, Path=SupportHeight, UpdateSourceTrigger=PropertyChanged}"
+                         LostFocus="TextBox_OnLostFocus" 
+                         Margin="0,4"/>
+            </WrapPanel>
+            <WrapPanel >
+                <Label Width="100">PanelAmount</Label>
+                <TextBox Width="100" 
+                         Text="{Binding ElementName=FavTruss, Path=PanelAmount, UpdateSourceTrigger=PropertyChanged}"
+                         LostFocus="TextBox_OnLostFocus" 
+                         Margin="0,4"/>
+            </WrapPanel>
+            <WrapPanel>
+                <Label Width="100">Unit force</Label>
+                <CheckBox Width="100"
+                          Margin="0,5"
+                          x:Name="UnitForceCheckBox"
+                          IsChecked="False"
+                          IsEnabled="True">Yes</CheckBox>
+            </WrapPanel>
+            <WrapPanel>
+                <Label Width="100">Load type</Label>
+                <ComboBox Width="100"
+                        x:Name="LoadListCB" 
+                          Margin="0,3" 
+                          ItemsSource="{Binding LoadList}"
+                          DisplayMemberPath="LoadType" SelectedIndex="0"></ComboBox>
+            </WrapPanel>
+            <WrapPanel>
+                <Label Width="100">Load</Label>
+                <TextBox Width="100" Text="{Binding NewProjectTruss.Load}" Margin="0,4"></TextBox>
+            </WrapPanel>
+            <WrapPanel>
+                <Label Width="100">Truss Spacing</Label>
+                <TextBox Width="100" Text="{Binding NewProjectTruss.TrussSpacing}" Margin="0,4"></TextBox>
+            </WrapPanel>
+        </StackPanel>
+        <Grid x:Name="TrussGrid" Grid.Column="1">
+            <userControls:TrussControl x:Name="FavTruss"
+                        Panel.ZIndex="-2"
+                        Height="{Binding ElementName=grTruss, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" 
+                        Width="{Binding ElementName=grTruss, Path=ActualWidth, UpdateSourceTrigger=PropertyChanged}"
+                        Grid.Row="0">
+            </userControls:TrussControl>
+        </Grid>
+        <WrapPanel Grid.ColumnSpan="3" 
+                   Grid.Row="1"
+                   HorizontalAlignment="Center">
+            <Button Width="100" Margin="10,5" x:Name="AddTrussBtn" Click="AddTrussBtn_Click">Add truss</Button>
+            <Button Width="100" Margin="10,5" x:Name="CancelBtn" Click="CancelBtn_Click">Cancel</Button>
+        </WrapPanel>
+    </Grid>
+</Window>
+

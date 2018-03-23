@@ -1,0 +1,75 @@
+<Application x:Class="TrussMe.WPF.App" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:local="clr-namespace:TrussMe.WPF" 
+             StartupUri="MainWindow.xaml" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             d1p1:Ignorable="d" 
+             xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:converters="clr-namespace:TrussMe.WPF.Converters">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Indigo.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" xmlns:vm="clr-namespace:TrussMe.WPF.ViewModel" />
+            <system:String x:Key="DecimalStringFormat">
+                {0:0.00}
+            </system:String>
+            <converters:RatioToBrushConverter x:Key="RatioToBrushConverter"></converters:RatioToBrushConverter>
+            <converters:CalcResultToVisibilityConverter x:Key="CalcResultToVisibilityConverter"></converters:CalcResultToVisibilityConverter>
+            <Style x:Key="TrussIcon" TargetType="ContentControl">
+                <Setter Property="ContentTemplate">
+                    <Setter.Value>
+                        <DataTemplate>
+                            <Image>
+                                <Image.Source>
+                                    <DrawingImage>
+                                        <DrawingImage.Drawing>
+                                            <DrawingGroup>
+                                                <GeometryDrawing Brush="#FFA0BEFF" 
+                                                                 Geometry="M 15,0 
+                                                                 A 15,15,0,0,0 0,15
+                                                                 L 0,135
+                                                                 A 15,15,0,0,0 15,150
+                                                                 L 95,150
+                                                                 A 15,15,0,0,0 110,135
+                                                                 L 110,15
+                                                                 A 15,15,0,0,0 95,0
+                                                                 Z">
+                                                    <GeometryDrawing.Pen>
+                                                        <Pen Brush="#FFA0BEFF" Thickness="3"></Pen>
+                                                    </GeometryDrawing.Pen>
+                                                </GeometryDrawing>
+                                                <GeometryDrawing Brush="#FF001A8D" 
+                                                                 Geometry="M 5,60
+                                                                 L 55,40
+                                                                 L 100,60
+                                                                 L 93, 75 L 18,75
+                                                                 Z">
+                                                    <GeometryDrawing.Pen>
+                                                        <Pen Brush="#FF001A8D" Thickness="7"></Pen>
+                                                    </GeometryDrawing.Pen>
+                                                </GeometryDrawing>
+                                                <!--<GeometryDrawing Brush="Transparent" 
+                                                                 Geometry="M 93, 75 L 80,50 L 68, 75 L 55,40 L 43,75 L 30,50 L 18,75">
+                                                    <GeometryDrawing.Pen>
+                                                        <Pen Brush="#FF001A8D" Thickness="7" LineJoin="Bevel"></Pen>
+                                                    </GeometryDrawing.Pen>
+                                                </GeometryDrawing>-->
+                                            </DrawingGroup>
+                                        </DrawingImage.Drawing>
+                                    </DrawingImage>
+                                </Image.Source>
+                            </Image>
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

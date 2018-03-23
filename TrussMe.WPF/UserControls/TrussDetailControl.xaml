@@ -1,0 +1,268 @@
+﻿<UserControl x:Class="TrussMe.WPF.UserControls.TrussDetailControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TrussMe.WPF.UserControls"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="1000" DataContext="{Binding Source={StaticResource Locator}, Path=Main}" Foreground="Black">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" ></RowDefinition>
+            <RowDefinition MinHeight="150" Height="Auto" ></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition MinHeight="250"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Background="{DynamicResource PrimaryHueLightBrush}">
+            <Button Command="{Binding SaveChangesCommand}" Margin="10,0,0,0" Background="Transparent" Foreground="#FF001A8D" BorderBrush="Transparent" Width="Auto" Height="Auto" Padding="0">
+                <StackPanel HorizontalAlignment="Center" Margin="5" >
+                    <materialDesign:PackIcon Kind="ContentSave" Height="30" Width="30" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Сохранить" VerticalAlignment="Center" ></TextBlock>
+                </StackPanel>
+            </Button>
+            <Button Margin="10,0,0,0" 
+                    Background="Transparent" 
+                    Command="{Binding CalculateTrussCommand}" 
+                    Foreground="#FF001A8D" 
+                    BorderBrush="Transparent" 
+                    Width="Auto" 
+                    Height="Auto" 
+                    Padding="0">
+                <StackPanel HorizontalAlignment="Center" Margin="5" >
+                    <materialDesign:PackIcon Kind="Calculator" Height="30" Width="30" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Расчет" VerticalAlignment="Center" ></TextBlock>
+                </StackPanel>
+            </Button>
+            <Button Margin="10,0,0,0" Background="Transparent" Command="{Binding CreateReportCommand}" Foreground="#FF001A8D" BorderBrush="Transparent" Width="Auto" Height="Auto" Padding="0">
+                <StackPanel  HorizontalAlignment="Center" Margin="5">
+                    <materialDesign:PackIcon Kind="FileWord" Height="30" Width="30" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Отчет"></TextBlock>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="300" Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="auto"></ColumnDefinition>
+                <ColumnDefinition MinWidth="210" Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" x:Name="grTruss">
+                <Grid.RowDefinitions>
+                    <RowDefinition ></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <local:TrussControl x:Name="FavTruss"
+                        Panel.ZIndex="-2"
+                        Height="100"
+                        Width="{Binding ElementName=grTruss, Path=ActualWidth, UpdateSourceTrigger=PropertyChanged}"
+                        Grid.Row="0">
+                </local:TrussControl>
+                <StackPanel Grid.Row="1">
+                    <WrapPanel>
+                        <TextBlock VerticalAlignment="Center"
+                                   TextAlignment="Center"
+                                   Text="{Binding ElementName=FavTruss, Path=Span, StringFormat=Пролет {0:0} мм}"
+                                   Width="100"></TextBlock>
+                        <TextBlock VerticalAlignment="Center"
+                                   TextAlignment="Center"
+                                   Text="{Binding ElementName=FavTruss, Path=Slope, StringFormat=Уклон {0:0.00}}"
+                                   Width="100"></TextBlock>
+                        <TextBlock VerticalAlignment="Center"
+                                   TextAlignment="Center"
+                                   Text="{Binding ElementName=FavTruss, Path=SupportHeight, StringFormat=Выс. на опоре {0:0} mm}"
+                                   Width="100"></TextBlock>
+                        <TextBlock VerticalAlignment="Center"
+                                   TextAlignment="Center"
+                                   Text="{Binding ElementName=FavTruss, Path=PanelAmount, StringFormat=Панели {0:0}}"
+                                   Width="100"></TextBlock>
+                    </WrapPanel>
+
+                </StackPanel>
+            </Grid>
+            <GridSplitter Grid.Column="1" Width="4" VerticalAlignment="Stretch" HorizontalAlignment="Center" ShowsPreview="False" Background="DarkGray"/>
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <materialDesign:Card Background="#FF001A8D" Foreground="White" Padding="5" VerticalAlignment="Stretch">
+                    <StackPanel>
+                        <TextBlock Margin="10,5">Сечения стержней</TextBlock>
+                        <DataGrid 
+                      ItemsSource="{Binding BarTemplateList}"
+                      SelectedItem="{Binding SelectedBarTemplate, Mode=TwoWay}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="False"
+                      CanUserAddRows="False">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction
+                                Command="{Binding DataContext.BarTemplateSelectionChangedCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid} }"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Тип" Binding="{Binding ShortName}" Width="50" IsReadOnly="True"/>
+                                <DataGridComboBoxColumn Header="Сечение"
+                                                    Width="100"
+                                                    SelectedItemBinding="{Binding Section, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                    DisplayMemberPath="SectionName">
+                                    <DataGridComboBoxColumn.ElementStyle>
+                                        <Style TargetType="{x:Type ComboBox}">
+                                            <Setter Property="ItemsSource" Value="{Binding Path=DataContext.SectionCollection, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                                        </Style>
+                                    </DataGridComboBoxColumn.ElementStyle>
+                                    <DataGridComboBoxColumn.EditingElementStyle>
+                                        <Style TargetType="{x:Type ComboBox}">
+                                            <Setter Property="ItemsSource" Value="{Binding Path=DataContext.SectionCollection, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                                        </Style>
+                                    </DataGridComboBoxColumn.EditingElementStyle>
+                                </DataGridComboBoxColumn>
+                                <DataGridComboBoxColumn Header="Сталь" 
+                                                    Width="100"
+                                                    SelectedItemBinding="{Binding Steel, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                                    DisplayMemberPath="Grade">
+                                    <DataGridComboBoxColumn.ElementStyle>
+                                        <Style TargetType="{x:Type ComboBox}">
+                                            <Setter Property="ItemsSource" Value="{Binding Path=DataContext.SteelCollection, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                                        </Style>
+                                    </DataGridComboBoxColumn.ElementStyle>
+                                    <DataGridComboBoxColumn.EditingElementStyle>
+                                        <Style TargetType="{x:Type ComboBox}">
+                                            <Setter Property="ItemsSource" Value="{Binding Path=DataContext.SteelCollection, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                                        </Style>
+                                    </DataGridComboBoxColumn.EditingElementStyle>
+                                </DataGridComboBoxColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </materialDesign:Card>
+                <materialDesign:Card Background="#FF001A8D" Foreground="White" Padding="5" VerticalAlignment="Stretch">
+                    <StackPanel>
+                        <TextBlock Margin="10,5" >Нагрузка</TextBlock>
+                        <StackPanel Background="{DynamicResource MaterialDesignPaper}"  Height="200">
+                            <TextBlock Foreground="Black" Text="{Binding SelectedTruss.LoadType, StringFormat=Тип нагрузки {0}}" Margin="0,0,0,10"/>
+                        <WrapPanel >
+                            <TextBlock Margin="5,0,0,0" Width="95" Foreground="Black">
+                                <Run>На 1 м</Run>
+                                <Run Typography.Variants="Superscript">2</Run>
+                                <Run> :</Run>
+                            </TextBlock>
+                                <TextBox Foreground="Black" Width="100" Text="{Binding SelectedProjectTruss.Load, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SelectedTruss.UnitForce}" VerticalContentAlignment="Center" >
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TextChanged">
+                                        <i:InvokeCommandAction
+                                            Command="{Binding LoadChangedCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                                <TextBlock Margin="0,0,5,0" Foreground="Black">
+                                <Run>кгс/м</Run>
+                                <Run Typography.Variants="Superscript">2</Run>
+                                </TextBlock>
+                        </WrapPanel>
+                        <WrapPanel Margin="0,0,0,10">
+                            <Label Width="100" >Шаг ферм:</Label>
+                            <TextBox Foreground="Black" Width="100" Text="{Binding SelectedProjectTruss.TrussSpacing, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SelectedTruss.UnitForce}" VerticalContentAlignment="Center" >
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TextChanged">
+                                        <i:InvokeCommandAction
+                                            Command="{Binding LoadChangedCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                            <Label>мм</Label>
+                        </WrapPanel>
+                    </StackPanel>
+                        </StackPanel>
+                </materialDesign:Card>
+            </StackPanel>
+
+
+        </Grid>
+        <GridSplitter Grid.Row="2" Height="4" HorizontalAlignment="Stretch" VerticalAlignment="Center" ShowsPreview="False" Background="DarkGray"/>
+        <DataGrid Grid.Row="3" 
+                  ItemsSource="{Binding BarCollection}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="False"
+                  CanUserAddRows="False"
+                  SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn IsReadOnly="True" Header="№" Binding="{Binding BarNumber}" />
+                <DataGridTextColumn IsReadOnly="True" Header="Тип" Binding="{Binding ElementType}" Width="*"/>
+                <DataGridTextColumn Header="Усилие" 
+                                    Binding="{Binding ActualForce, StringFormat={StaticResource DecimalStringFormat}}" 
+                                    Width="*">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="IsEnabled" 
+                                    Value="{Binding DataContext.SelectedTruss.NotUnitForce, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid}}"/>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Момент" 
+                                    Binding="{Binding ActualMoment, StringFormat={StaticResource DecimalStringFormat}}" 
+                                    Width="*">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="IsEnabled" 
+                                    Value="{Binding DataContext.SelectedTruss.NotUnitForce, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid}}"/>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Длина" 
+                                    Binding="{Binding Length}" 
+                                    Width="*">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="IsEnabled" 
+                                    Value="{Binding DataContext.SelectedTruss.NotUnitForce, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid}}"/>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+
+
+                <DataGridComboBoxColumn Header="Сечение"
+                                        Width="*"
+                                        SelectedItemBinding="{Binding Section, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                        DisplayMemberPath="SectionName">
+                    <DataGridComboBoxColumn.ElementStyle>
+                        <Style TargetType="{x:Type ComboBox}">
+                            <Setter Property="ItemsSource" Value="{Binding Path=DataContext.SectionCollection, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                        </Style>
+                    </DataGridComboBoxColumn.ElementStyle>
+                    <DataGridComboBoxColumn.EditingElementStyle>
+                        <Style TargetType="{x:Type ComboBox}">
+                            <Setter Property="ItemsSource" Value="{Binding Path=DataContext.SectionCollection, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                        </Style>
+                    </DataGridComboBoxColumn.EditingElementStyle>
+                </DataGridComboBoxColumn>
+                <DataGridComboBoxColumn Header="Сталь" 
+                                        Width="*"
+                                        SelectedItemBinding="{Binding Steel, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                        DisplayMemberPath="Grade">
+                    <DataGridComboBoxColumn.ElementStyle>
+                        <Style TargetType="{x:Type ComboBox}">
+                            <Setter Property="ItemsSource" Value="{Binding Path=DataContext.SteelCollection, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                        </Style>
+                    </DataGridComboBoxColumn.ElementStyle>
+                    <DataGridComboBoxColumn.EditingElementStyle>
+                        <Style TargetType="{x:Type ComboBox}">
+                            <Setter Property="ItemsSource" Value="{Binding Path=DataContext.SteelCollection, RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                        </Style>
+                    </DataGridComboBoxColumn.EditingElementStyle>
+                </DataGridComboBoxColumn>
+                <DataGridTextColumn IsReadOnly="True" 
+                                    Header="Несущая способность" 
+                                    Binding="{Binding CalcResult, StringFormat={StaticResource DecimalStringFormat}}" 
+                                    Width="2*" Visibility="{Binding Path=DataContext.ResultVisibility, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                    x:Name="ResultColumn">
+                    <DataGridTextColumn.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Background" 
+                                    Value="{Binding CalcResult, Converter={StaticResource RatioToBrushConverter}}"></Setter>
+                        </Style>
+                    </DataGridTextColumn.CellStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn IsReadOnly="True" Header="Тип расчета" Binding="{Binding CalcType}" Width="2*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

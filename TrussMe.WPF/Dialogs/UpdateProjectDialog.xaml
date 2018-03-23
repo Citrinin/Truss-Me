@@ -1,0 +1,70 @@
+﻿<Window x:Class="TrussMe.WPF.Dialogs.UpdateProjectDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TrussMe.WPF.Dialogs"
+        mc:Ignorable="d"
+        Title="AddProjectDialog" Height="220" Width="300">
+    <Window.Resources>
+        <Style x:Key="TbErrorTemplateStyle" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <StackPanel>
+                            <Border BorderBrush="Red" BorderThickness="3">
+                                <AdornedElementPlaceholder></AdornedElementPlaceholder>
+                            </Border>
+                            <TextBlock Text="{Binding [0].ErrorContent}" Foreground="Red"></TextBlock>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition ></ColumnDefinition>
+            <ColumnDefinition Width="3*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"></RowDefinition>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <Label Margin="0,5">Code</Label>
+            <Label Margin="0,30">Description</Label>
+        </StackPanel>
+        <StackPanel Grid.Row="0" Grid.Column="1">
+            <TextBox x:Name="TextBoxCode"
+                     Height="30" 
+                     Margin="5"
+                     Style="{StaticResource TbErrorTemplateStyle}" Text="{Binding Code}" IsEnabled="False">
+                <!--<TextBox.Text>
+                        <Binding Path="Code" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <validationRules:ProjectCodeRule ValidatesOnTargetUpdated="True"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>-->
+            </TextBox>
+            <TextBox x:Name="TextBoxDescription" Height="70" Margin="5,20" Text="{Binding Description}" TextWrapping="Wrap" VerticalContentAlignment="Top"></TextBox>
+        </StackPanel>
+        <StackPanel Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button x:Name="ButtonOk" Width="100"  Margin="5,0" Click="BtnOK_OnClick" Content="OK" IsDefault="True">
+                <!--<Button.Style>
+                        <Style >
+                            <Style.Triggers>
+                                <DataTrigger 
+                                 Binding ="{Binding ElementName=TextBoxCode, Path=(Validation.HasError)}" 
+                                 Value="true">
+                                    <Setter Property="Button.IsEnabled" Value="false"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>-->
+            </Button>
+            <Button x:Name="ButtonCancel" Width="100" Margin="5,0"  Click="BtnCancel_OnClick" IsCancel="True">Cancel</Button>
+        </StackPanel>
+    </Grid>
+</Window>

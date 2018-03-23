@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="TrussMe.WPF.UserControls.SelectProjectTrussControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TrussMe.WPF.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="800"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             DataContext="{Binding Source={StaticResource Locator}, Path=Main}" Foreground="#FF001A8D">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Background="{DynamicResource PrimaryHueLightBrush}">
+            <Button Command="{Binding AddTrussCommand}" Background="Transparent" Foreground="#FF001A8D" BorderBrush="Transparent" Width="Auto" Height="Auto" Padding="0">
+                <StackPanel HorizontalAlignment="Center" Margin="5">
+                    <materialDesign:PackIcon Kind="PlusBox" Height="30" Width="30" HorizontalAlignment="Center"></materialDesign:PackIcon>
+                    <TextBlock Text="Добавить"></TextBlock>
+                </StackPanel>
+            </Button>
+            <Button Background="Transparent" Foreground="#FF001A8D" BorderBrush="Transparent" Width="Auto" Height="Auto" Padding="0" Command="{Binding EditTrussCommand}">
+                <StackPanel HorizontalAlignment="Center" Margin="5">
+                    <materialDesign:PackIcon Kind="Pencil" Height="30" Width="30" HorizontalAlignment="Center"></materialDesign:PackIcon>
+                    <TextBlock Text="Редактировать"></TextBlock>
+                </StackPanel>
+            </Button>
+            <Button Background="Transparent" Foreground="#FF001A8D" BorderBrush="Transparent" Width="Auto" Height="Auto" Padding="0" Command="{Binding RemoveTrussCommand}">
+                <StackPanel HorizontalAlignment="Center" Margin="5">
+                    <materialDesign:PackIcon Kind="CloseBox" Height="30" Width="30" HorizontalAlignment="Center"></materialDesign:PackIcon>
+                    <TextBlock Text="Удалить"></TextBlock>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        <DataGrid Grid.Row="1" ItemsSource="{Binding ProjectsTrussesCollection}"
+                                    IsReadOnly="True"
+                                    AutoGenerateColumns="False"
+                                    SelectedItem="{Binding SelectedProjectTruss}"
+                                    x:Name="DataGridTrussList">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding TrussName}" Header="Имя" Width="Auto"/>
+                <DataGridTextColumn Binding="{Binding Truss.Span}" Header="Пролет, мм" Width="Auto"/>
+                <DataGridTextColumn Binding="{Binding Truss.Slope}" Header="Уклон" Width="Auto"/>
+                <DataGridTextColumn Binding="{Binding Truss.SupportDepth}" Header="Высота на опоре, мм" Width="Auto"/>
+                <DataGridTextColumn Binding="{Binding Truss.PanelAmount}" Header="Количество панелей" Width="Auto"/>
+                <DataGridTextColumn Binding="{Binding Truss.LoadType}" Header="Тип нагрузки" Width="Auto"/>
+                <!--<DataGridCheckBoxColumn Binding="{Binding Truss.UnitForce}" Header="Unit force" Width="Auto"/>-->
+                <DataGridTextColumn Binding="{Binding Load}" Header="Нагрузка, кг/м2" Width="Auto"/>
+                <DataGridTextColumn Binding="{Binding TrussSpacing}" Header="Шаг ферм, мм" Width="Auto"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>
