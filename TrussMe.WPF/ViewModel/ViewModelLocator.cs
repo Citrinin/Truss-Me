@@ -1,17 +1,3 @@
-/*
-  In App.xaml:
-  <Application.Resources>
-      <vm:ViewModelLocator xmlns:vm="clr-namespace:TrussMe.WPF"
-                           x:Key="Locator" />
-  </Application.Resources>
-  
-  In the View:
-  DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
-
-  You can also use Blend to do all this with the tool's support.
-  See http://www.galasoft.ch/mvvm
-*/
-
 using AutoMapper;
 using AutoMapper.Configuration;
 using GalaSoft.MvvmLight;
@@ -21,6 +7,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using TrussMe.DataAccess.EFContext;
 using TrussMe.Model.Interfaces;
 using TrussMe.Model.Repositories;
 
@@ -57,6 +44,7 @@ namespace TrussMe.WPF.ViewModel
             SimpleIoc.Default.Register<ITrussRepository, TrussRepository>();
             SimpleIoc.Default.Register<ISteelRepository, SteelRepository>();
             SimpleIoc.Default.Register<ISectionRepository, SectionRepository>();
+            SimpleIoc.Default.Register<TrussContext>();
         }
 
         public MainViewModel Main

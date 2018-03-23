@@ -12,10 +12,9 @@ namespace TrussMe.Model.Repositories
 
         private readonly TrussContext _trussContext;
 
-        public ProjectTrussRepository()
+        public ProjectTrussRepository(TrussContext trussContext)
         {
-
-            this._trussContext = new TrussContext();
+            this._trussContext = trussContext;
         }
 
         public ProjectTruss GetInfo(Project project, Truss truss)

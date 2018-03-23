@@ -177,6 +177,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TrussMe.DataAccess\TrussMe.DataAccess.csproj">
+      <Project>{fc9b69f8-fb6d-4237-96e9-d7073bd231bf}</Project>
+      <Name>TrussMe.DataAccess</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TrussMe.Model\TrussMe.Model.csproj">
       <Project>{11ED2530-CB55-47FB-AA50-E425A476C27B}</Project>
       <Name>TrussMe.Model</Name>

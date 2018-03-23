@@ -20,9 +20,9 @@ namespace TrussMe.Model.Repositories
 
         private readonly TrussContext _trussContext;
 
-        public ProjectRepository()
+        public ProjectRepository(TrussContext trussContext)
         {
-            this._trussContext = new TrussContext();
+            this._trussContext = trussContext;
             ModelMappingProfile.MapperInitializer(this._trussContext);
 
         }

@@ -15,9 +15,9 @@ namespace TrussMe.Model.Repositories
     {
         private readonly TrussContext _trussContext;
 
-        public TrussRepository()
+        public TrussRepository(TrussContext trussContext)
         {
-            _trussContext = new TrussContext();
+            this._trussContext = trussContext;
         }
 
         public void Add(Truss item)

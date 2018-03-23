@@ -11,9 +11,9 @@ namespace TrussMe.Model.Repositories
     public class SteelRepository : ISteelRepository
     {
         private readonly TrussContext _trussContext;
-        public SteelRepository()
+        public SteelRepository(TrussContext trussContext)
         {
-            _trussContext = new TrussContext();
+            this._trussContext = trussContext;
         }
         public void Add(Steel item)
         {

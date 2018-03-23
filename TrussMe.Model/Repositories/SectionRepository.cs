@@ -12,9 +12,9 @@ namespace TrussMe.Model.Repositories
     {
         private readonly TrussContext _trussContext;
 
-        public SectionRepository()
+        public SectionRepository(TrussContext trussContext)
         {
-            _trussContext = new TrussContext();
+            this._trussContext = trussContext;
         }
 
         public void Add(Section item)
