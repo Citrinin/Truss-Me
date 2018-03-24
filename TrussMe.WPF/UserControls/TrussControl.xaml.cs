@@ -20,7 +20,6 @@ namespace TrussMe.WPF.UserControls
         }
         private void TrussCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            //MessageBox.Show(typeof(sender));
             DrawTruss();
         }
 
@@ -33,6 +32,7 @@ namespace TrussMe.WPF.UserControls
         // Using a DependencyProperty as the backing store for Span.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SpanProperty =
             DependencyProperty.Register("Span", typeof(int), typeof(TrussControl), new PropertyMetadata(18000));
+
 
 
 

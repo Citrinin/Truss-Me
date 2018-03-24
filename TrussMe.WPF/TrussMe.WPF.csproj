@@ -100,12 +100,26 @@
     </Compile>
     <Compile Include="UserControls\SelectProjectControl.xaml.cs" />
     <Compile Include="UserControls\SelectProjectTrussControl.xaml.cs" />
+    <Compile Include="UserControls\SettingsControl.xaml.cs">
+      <DependentUpon>SettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\StartControl.xaml.cs">
+      <DependentUpon>StartControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\TrussControl.xaml.cs">
       <DependentUpon>TrussControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\TrussDetailControl.xaml.cs">
       <DependentUpon>TrussDetailControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Validation\HeightValidation.cs" />
+    <Compile Include="Validation\LoadValidation.cs" />
+    <Compile Include="Validation\PanelAmountValidation.cs" />
+    <Compile Include="Validation\SlopeValidation.cs" />
+    <Compile Include="Validation\IntegerValidation.cs" />
+    <Compile Include="Validation\NotEmptyValidation.cs" />
+    <Compile Include="Validation\SpacingValidation.cs" />
+    <Compile Include="Validation\SpanValidation.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="Dialogs\AddProjectDialog.xaml">
@@ -139,6 +153,14 @@
     <Page Include="UserControls\SelectProjectTrussControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserControls\SettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\StartControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\TrussControl.xaml">
       <SubType>Designer</SubType>

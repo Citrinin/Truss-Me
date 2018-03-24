@@ -35,7 +35,16 @@ namespace TrussMe.WPF.Dialogs
 
         // Using a DependencyProperty as the backing store for Code.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CodeProperty =
-            DependencyProperty.Register("Code", typeof(string), typeof(AddProjectDialog), new PropertyMetadata(""));
+            DependencyProperty.Register("Code", typeof(string), typeof(AddProjectDialog), new PropertyMetadata(default(string)));
+
+        public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(
+            "Description", typeof(string), typeof(AddProjectDialog), new PropertyMetadata(default(string)));
+
+        public string Description
+        {
+            get => (string)GetValue(DescriptionProperty);
+            set => SetValue(DescriptionProperty, value);
+        }
 
         private void BtnCancel_OnClick(object sender, RoutedEventArgs e)
         {
@@ -48,7 +57,7 @@ namespace TrussMe.WPF.Dialogs
             {
                 ProjectId = 0,
                 Code = this.Code,
-                Description = this.TextBoxDescription.Text
+                Description = this.Description
             };
             DialogResult = true;
         }

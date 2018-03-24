@@ -56,14 +56,15 @@ namespace TrussMe.WPF.ViewModel
         private ObservableCollection<Section> _sectionCollection;
         private ObservableCollection<Steel> _steelCollection;
 
-        private UserControl _activeUserControl;
+        private UserControl _activeUserControl = new StartControl();
 
         private List<Action> _actions = new List<Action>();
-        private bool _fullListOfSections = true;
+        private bool _shortListOfSections = true;
         private bool _editForces = false;
         private bool _calculated = false;
         private Visibility _resultVisibility = Visibility.Collapsed;
         private IEnumerable<Paragraph> _report;
+        private float _trussWeight=0;
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
@@ -93,6 +94,75 @@ namespace TrussMe.WPF.ViewModel
             this._actions.Add(openProjectAction);
             OpenProjectMenuCommand = new RelayCommand(openProjectAction);
 
+            #endregion
+
+            #region addProject
+
+            this.AddProjectCommand = new RelayCommand(() =>
+            {
+                AddProjectDialog addNewProj = new AddProjectDialog();
+                if (addNewProj.ShowDialog() == true)
+                {
+                    Project tempProj = addNewProj.NewProject;
+                    try
+                    {
+                        this._projectRepository.Add(tempProj);
+                        ProjectsCollection.Add(tempProj);
+                    }
+                    catch (DbUpdateException e)
+                    {
+                        MessageBox.Show("Проект с данным кодом уже существует!");
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message, "Ошибка при добавлении проекта");
+                    }
+                }
+            });
+
+            #endregion
+
+            #region UpdateProject
+
+            UpdateProjectCommand = new RelayCommand(
+                () =>
+                {
+                    var updateProjectDialog = new UpdateProjectDialog(SelectedProject);
+                    if (updateProjectDialog.ShowDialog() == true)
+                    {
+                        try
+                        {
+                            this._projectRepository.Update(SelectedProject);
+                        }
+                        catch (DbUpdateException e)
+                        {
+                            MessageBox.Show(e.Message);
+                        }
+
+                    }
+                },
+                () => SelectedProject != null);
+
+            #endregion
+
+            #region RemoveProject
+
+            this.RemoveProjectCommand = new RelayCommand(() =>
+            {
+
+                if (MessageBox.Show("Вы уверены, что хотите удалить проект?", "Удаление проекта", MessageBoxButton.OKCancel)==MessageBoxResult.OK)
+                {
+                    try
+                    {
+                        this._projectRepository.Remove(SelectedProject);
+                        ProjectsCollection.Remove(SelectedProject);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message, "Ошибка при удалении проекта");
+                    }
+                }
+            }, () => SelectedProject != null);
             #endregion
 
             #region openTruss
@@ -136,101 +206,53 @@ namespace TrussMe.WPF.ViewModel
 
             #endregion
 
-            #region addProject
+            #region EditTruss
 
-            this.AddProjectCommand = new RelayCommand(() =>
+            EditTrussCommand = new RelayCommand(() =>
             {
-                AddProjectDialog addNewProj = new AddProjectDialog();
-                if (addNewProj.ShowDialog() == true)
+                var editTussDialog = new AddTrussDialog(SelectedProjectTruss, this._trussRepository.GetTypeOfLoads());
+                if (editTussDialog.ShowDialog() == true)
                 {
-                    Project tempProj = addNewProj.NewProject;
-                    try
-                    {
-                        this._projectRepository.Add(tempProj);
-                        ProjectsCollection.Add(tempProj);
-                    }
-                    catch (DbUpdateException e)
-                    {
-                        MessageBox.Show("Проект с данным кодом уже существует!");
-                    }
-                    catch (Exception e)
-                    {
-                        MessageBox.Show(e.Message, "Ошибка при добавлении проекта");
-                    }
+                    this._projectTrussRepository.Update(editTussDialog.NewProjectTruss);
+                    editTussDialog.NewProjectTruss.Truss.TrussId = editTussDialog.NewProjectTruss.TrussId;
+                    this._trussRepository.Update(editTussDialog.NewProjectTruss.Truss);
+                    //SelectedTruss = editTussDialog.NewProjectTruss.Truss;
                 }
-            });
+            }, () => SelectedProjectTruss != null);
 
             #endregion
 
-            #region RemoveProject
+            #region RemoveTruss
 
-            this.RemoveProjectCommand = new RelayCommand(() =>
-            {
-                try
+            RemoveTrussCommand = new RelayCommand(() =>
                 {
-                    this._projectRepository.Remove(SelectedProject);
-                    ProjectsCollection.Remove(SelectedProject);
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.Message, "Ошибка при удалении проекта");
-                }
-
-                //WindowTitle = "";
-            }, () => SelectedProject != null);
-
-            #endregion
-
-            #region UpdateProject
-
-            UpdateProjectCommand = new RelayCommand(
-                () =>
-                {
-                    var updateProjectDialog = new UpdateProjectDialog(SelectedProject);
-                    if (updateProjectDialog.ShowDialog() == true)
+                    if (MessageBox.Show("Вы уверены, что хотите удалить ферму?", "Удаление фермы",
+                            MessageBoxButton.OKCancel) == MessageBoxResult.OK)
                     {
                         try
                         {
-                            this._projectRepository.Update(SelectedProject);
+                            this._projectTrussRepository.Remove(SelectedProjectTruss);
+                            ProjectsTrussesCollection.Remove(SelectedProjectTruss);
                         }
-                        catch (DbUpdateException e)
+                        catch (Exception e)
                         {
-                            MessageBox.Show(e.Message);
+                            MessageBox.Show(e.Message, "Ошибка при удалении фермы");
                         }
 
                     }
-                },
-                () => SelectedProject != null);
+                },()=>SelectedProjectTruss!=null
+                );
 
-            #endregion
-
-
-
-            #region LoadChangedCmd
-
-            LoadChangedCommand = new RelayCommand(() =>
-            {
-                var coeff = SelectedTruss.UnitForce
-                    ? SelectedProjectTruss.Load * SelectedProjectTruss.TrussSpacing / 100000
-                    : 1;
-                foreach (var item in BarCollection)
-                {
-
-                    item.ActualForce = item.Force * coeff;
-                    item.ActualMoment = item.Moment * coeff;
-                }
-            }, () => ActiveUserControl is TrussDetailControl && SelectedTruss.UnitForce && SelectedProjectTruss != null);
-            #endregion
+             #endregion
 
             #region DetailTruss
 
             DetailTrussMenuCommand = new RelayCommand(() =>
             {
                 SelectedTruss = SelectedProjectTruss.Truss;
-                //MessageBox.Show(SelectedTruss.Span.ToString()+"  from proect  "+SelectedProject.Code);
                 BarTemplateList = new List<BarTemplate>(this._trussRepository.GetBarTypes());
 
-                SectionCollection = new ObservableCollection<Section>(this._sectionRepository.GetAll().Where(sec => sec.ShortList == FullListOfSections));
+                SectionCollection = new ObservableCollection<Section>(this._sectionRepository.GetAll().Where(sec => ShortListOfSections? sec.ShortList == ShortListOfSections:true));
                 SteelCollection = new ObservableCollection<Steel>(this._steelRepository.GetAll());
                 BarCollection = new ObservableCollection<Bar>(SelectedTruss.Bar.OrderBy(bar => bar.BarNumber));
 
@@ -277,6 +299,31 @@ namespace TrussMe.WPF.ViewModel
 
             #endregion
 
+            #region SaveProjectChangesCmd
+
+            SaveChangesCommand = new RelayCommand(() =>
+            {
+                this._projectTrussRepository.SaveChanges(SelectedProjectTruss);
+            }, () => SelectedProjectTruss != null);
+
+            #endregion
+
+            #region LoadChangedCmd
+
+            LoadChangedCommand = new RelayCommand(() =>
+            {
+                var coeff = SelectedTruss.UnitForce
+                    ? SelectedProjectTruss.Load * SelectedProjectTruss.TrussSpacing / 100000
+                    : 1;
+                foreach (var item in BarCollection)
+                {
+
+                    item.ActualForce = item.Force * coeff;
+                    item.ActualMoment = item.Moment * coeff;
+                }
+            }, () => /*ActiveUserControl is TrussDetailControl && */SelectedTruss.UnitForce && SelectedProjectTruss != null);
+            #endregion
+
             #region BarTemplateSelectionChangedCmd
 
             BarTemplateSelectionChangedCommand = new RelayCommand(() =>
@@ -304,13 +351,16 @@ namespace TrussMe.WPF.ViewModel
 
             CalculateTrussCommand = new RelayCommand(() =>
             {
+                TrussWeight = 0;
                 var f = true;
                 foreach (var bar in BarCollection)
                 {
+                    TrussWeight += bar.Length / 1000F * bar.Section.Mass / 1000F;
                     if (bar.Length == 0 || bar.ActualForce == 0 || bar.Section == null || bar.Steel == null)
                     {
                         f = false;
-                        break;
+                        //break;
+                        
                     }
                 }
                 if (f)
@@ -329,6 +379,7 @@ namespace TrussMe.WPF.ViewModel
                 }
                 else
                 {
+                    TrussWeight = 0;
                     MessageBox.Show("Заполните данные о сечениях фермы");
                 }
             }, () => SelectedProjectTruss != null);
@@ -381,22 +432,23 @@ namespace TrussMe.WPF.ViewModel
 
             #endregion
 
-            #region SaveProjectChangesCmd
+            #region Settings
 
-            SaveChangesCommand = new RelayCommand(() =>
+            SettingsMenuCommand = new RelayCommand(() =>
             {
-                this._projectTrussRepository.SaveChanges(SelectedProjectTruss);
-            }, () => SelectedProjectTruss != null);
+                this.ActiveUserControl = new SettingsControl();
+            });
 
             #endregion
+
 
         }
 
 
-        public bool FullListOfSections
+        public bool ShortListOfSections
         {
-            get { return _fullListOfSections; }
-            set { Set(nameof(FullListOfSections), ref _fullListOfSections, value); }
+            get { return _shortListOfSections; }
+            set { Set(nameof(ShortListOfSections), ref _shortListOfSections, value); }
         }
         public bool EditForces
         {
@@ -479,6 +531,12 @@ namespace TrussMe.WPF.ViewModel
             get { return this._resultVisibility; }
             set { Set(nameof(ResultVisibility), ref this._resultVisibility, value); }
         }
+        
+        public float TrussWeight
+        {
+            get { return this._trussWeight; }
+            set { Set(nameof(TrussWeight), ref this._trussWeight, value); }
+        }
 
         public RelayCommand OpenProjectMenuCommand { get; set; }
         public RelayCommand OpenTrussMenuCommand { get; set; }
@@ -492,6 +550,9 @@ namespace TrussMe.WPF.ViewModel
         public RelayCommand UpdateProjectCommand { get; set; }
         public RelayCommand AddTrussCommand { get; set; }
         public RelayCommand SaveChangesCommand { get; set; }
+        public RelayCommand EditTrussCommand { get; set; }
+        public RelayCommand RemoveTrussCommand { get; set; }
+        public RelayCommand SettingsMenuCommand { get; set; }
 
 
 

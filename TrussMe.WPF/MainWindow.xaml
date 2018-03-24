@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:TrussMe.WPF"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:userControls="clr-namespace:TrussMe.WPF.UserControls"
 
         mc:Ignorable="d" 
         Height="600" Width="1080"
@@ -164,6 +165,12 @@
                     </ListViewItem>
                     <ListViewItem Height="60" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
                         <StackPanel Orientation="Horizontal" Background="Transparent">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseDown">
+                                    <i:InvokeCommandAction
+                                        Command="{Binding SettingsMenuCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
                             <materialDesign:PackIcon Kind="Settings" Width="35" Height="35" Margin="5,0" VerticalAlignment="Center"/>
                             <TextBlock Text="Настройки" VerticalAlignment="Center" Margin="20 10"></TextBlock>
                         </StackPanel>
@@ -175,6 +182,7 @@
         <UserControl Grid.Row="1" Grid.Column="1" x:Name="ActiveUserControl" Content="{Binding ActiveUserControl}">
 
         </UserControl>
+
     </Grid>
 </Window>
 

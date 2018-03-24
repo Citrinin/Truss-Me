@@ -3,10 +3,25 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TrussMe.WPF.Dialogs"
         xmlns:userControls="clr-namespace:TrussMe.WPF.UserControls"
+        xmlns:validation="clr-namespace:TrussMe.WPF.Validation"
         mc:Ignorable="d"
-    Title="AddTrussDialog" Height="365" Width="650">
+        x:Name="TrussWindow"
+    Title="Добавить ферму" Height="530" Width="800">
+    <Window.Resources>
+        <Style x:Key="TbErrorTemplateStyle" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <StackPanel>
+                            <AdornedElementPlaceholder></AdornedElementPlaceholder>
+                            <TextBlock Text="{Binding [0].ErrorContent}" Foreground="Red"></TextBlock>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -16,70 +31,141 @@
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Vertical">
-            <WrapPanel Orientation="Horizontal">
-                <Label Width="100">Name</Label>
-                <TextBox Text="{Binding NewProjectTruss.TrussName}" 
-                         Margin="0,4" 
+        <StackPanel Orientation="Vertical" Width="300">
+            <WrapPanel Orientation="Horizontal" Height="50">
+                <Label Width="100">Имя фермы</Label>
+                <TextBox Margin="0,4" 
                          x:Name="TextBoxName" 
-                         Width="100">
+                         Width="150"
+                    Style="{StaticResource TbErrorTemplateStyle}">
+                    <TextBox.Text>
+                        <Binding Path="NewProjectTruss.TrussName" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <validation:NotEmptyValidation ValidatesOnTargetUpdated="True"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
                 </TextBox>
+                
             </WrapPanel>
-            <WrapPanel>
-                <Label Width="100">Span</Label>
-                <TextBox  Width="100" 
-                          Text="{Binding ElementName=FavTruss, Path=Span, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+            <WrapPanel Height="50">
+                <Label Width="100">Пролет</Label>
+                <TextBox  x:Name="TextBoxSpan"
+                    Width="150" 
                           LostFocus="TextBox_OnLostFocus" 
-                          Margin="0,4">
+                          Margin="0,4"
+                    Style="{StaticResource TbErrorTemplateStyle}">
+                    <TextBox.Text>
+                        <Binding ElementName="FavTruss" Path="Span" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <validation:SpanValidation ValidatesOnTargetUpdated="True"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <TextBlock Padding="5">мм</TextBlock>
+            </WrapPanel>
+            <WrapPanel Height="50">
+                <Label Width="100">Уклон</Label>
+                <TextBox Width="150" 
+                         x:Name="TextBoxSlope"
+                         LostFocus="TextBox_OnLostFocus" 
+                         Margin="0,4"
+                    Style="{StaticResource TbErrorTemplateStyle}">
+                    <TextBox.Text>
+                        <Binding ElementName="FavTruss" Path="Slope" UpdateSourceTrigger="PropertyChanged" StringFormat="{}{0:0.000}">
+                            <Binding.ValidationRules>
+                                <validation:SlopeValidation ValidatesOnTargetUpdated="True"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
                 </TextBox>
             </WrapPanel>
-            <WrapPanel>
-                <Label Width="100">Slope</Label>
-                <TextBox Width="100" 
-                         Text="{Binding ElementName=FavTruss, Path=Slope, UpdateSourceTrigger=PropertyChanged , Mode=TwoWay, StringFormat= {}{0:0.000}}" 
+            <WrapPanel Height="50">
+                <StackPanel>
+                    <TextBlock TextWrapping="WrapWithOverflow" Width="100" Padding="5">Высота на опоре</TextBlock>
+                </StackPanel>
+
+                <TextBox Width="145" 
+                         x:Name="TextBoxHeight"
                          LostFocus="TextBox_OnLostFocus" 
-                         Margin="0,4"/>
+                         Margin="0,4"
+                Style="{StaticResource TbErrorTemplateStyle}">
+                <TextBox.Text>
+                        <Binding ElementName="FavTruss" Path="SupportHeight" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <validation:HeightValidation ValidatesOnTargetUpdated="True"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+                    </TextBox>
+                <TextBlock Padding="5">мм</TextBlock>
             </WrapPanel>
-            <WrapPanel>
-                <Label Width="100">Height</Label>
-                <TextBox Width="100" 
-                         Text="{Binding ElementName=FavTruss, Path=SupportHeight, UpdateSourceTrigger=PropertyChanged}"
+            <WrapPanel Height="50">
+                <TextBlock TextWrapping="WrapWithOverflow" Width="100" Padding="5">Количество панелей</TextBlock>
+                <TextBox Width="150"
+                         x:Name="TextBoxPanelAmount"
                          LostFocus="TextBox_OnLostFocus" 
-                         Margin="0,4"/>
+                         Margin="0,4"
+                Style="{StaticResource TbErrorTemplateStyle}">
+                <TextBox.Text>
+                        <Binding ElementName="FavTruss" Path="PanelAmount" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <validation:PanelAmountValidation ValidatesOnTargetUpdated="True"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+                    </TextBox>
             </WrapPanel>
-            <WrapPanel >
-                <Label Width="100">PanelAmount</Label>
-                <TextBox Width="100" 
-                         Text="{Binding ElementName=FavTruss, Path=PanelAmount, UpdateSourceTrigger=PropertyChanged}"
-                         LostFocus="TextBox_OnLostFocus" 
-                         Margin="0,4"/>
-            </WrapPanel>
-            <WrapPanel>
-                <Label Width="100">Unit force</Label>
+            <WrapPanel Height="50">
+                <TextBlock TextWrapping="WrapWithOverflow" Width="100" Padding="5" IsEnabled="{Binding CreateMode}">Единичные усилия</TextBlock>
                 <CheckBox Width="100"
                           Margin="0,5"
                           x:Name="UnitForceCheckBox"
                           IsChecked="False"
-                          IsEnabled="True">Yes</CheckBox>
+                          IsEnabled="True">Да</CheckBox>
             </WrapPanel>
-            <WrapPanel>
-                <Label Width="100">Load type</Label>
-                <ComboBox Width="100"
+            <WrapPanel Height="50">
+                <Label Width="100">Тип нагрузки</Label>
+                <ComboBox Width="150"
                         x:Name="LoadListCB" 
                           Margin="0,3" 
                           ItemsSource="{Binding LoadList}"
                           DisplayMemberPath="LoadType" SelectedIndex="0"></ComboBox>
+            </WrapPanel> 
+            <WrapPanel Height="50">
+                <Label Width="100">Нагрузка</Label>
+                <TextBox Width="150" Margin="0,4" x:Name="TextBoxLoad"
+                    Style="{StaticResource TbErrorTemplateStyle}">
+                    <TextBox.Text>
+                        <Binding  Path="NewProjectTruss.Load" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <validation:LoadValidation ValidatesOnTargetUpdated="True"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <TextBlock Padding="5">
+                    <Run>кгс/м</Run>
+                    <Run Typography.Variants="Superscript">2</Run>
+                </TextBlock>
             </WrapPanel>
-            <WrapPanel>
-                <Label Width="100">Load</Label>
-                <TextBox Width="100" Text="{Binding NewProjectTruss.Load}" Margin="0,4"></TextBox>
-            </WrapPanel>
-            <WrapPanel>
-                <Label Width="100">Truss Spacing</Label>
-                <TextBox Width="100" Text="{Binding NewProjectTruss.TrussSpacing}" Margin="0,4"></TextBox>
+            <WrapPanel Height="50">
+                <Label Width="100">Шаг ферм</Label>
+                <TextBox Width="150" Margin="0,4" x:Name="TextBoxSpacing"
+                    Style="{StaticResource TbErrorTemplateStyle}">
+                    <TextBox.Text>
+                        <Binding  Path="NewProjectTruss.TrussSpacing" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <validation:SpacingValidation ValidatesOnTargetUpdated="True"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <TextBlock Padding="5">мм</TextBlock>
             </WrapPanel>
         </StackPanel>
-        <Grid x:Name="TrussGrid" Grid.Column="1">
+        <Grid x:Name="TrussGrid" Grid.Row="0" Grid.Column="1">
             <userControls:TrussControl x:Name="FavTruss"
                         Panel.ZIndex="-2"
                         Height="{Binding ElementName=grTruss, Path=ActualHeight, UpdateSourceTrigger=PropertyChanged}" 
@@ -87,11 +173,53 @@
                         Grid.Row="0">
             </userControls:TrussControl>
         </Grid>
-        <WrapPanel Grid.ColumnSpan="3" 
+        <WrapPanel Grid.ColumnSpan="2" Grid.Column="0"
                    Grid.Row="1"
                    HorizontalAlignment="Center">
-            <Button Width="100" Margin="10,5" x:Name="AddTrussBtn" Click="AddTrussBtn_Click">Add truss</Button>
-            <Button Width="100" Margin="10,5" x:Name="CancelBtn" Click="CancelBtn_Click">Cancel</Button>
+            <Button Width="100" Margin="10,5" x:Name="AddTrussBtn" Click="AddTrussBtn_Click" Content="Добавить">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                        <Style.Triggers>
+                            <DataTrigger 
+                                Binding ="{Binding ElementName=TextBoxName, Path=(Validation.HasError)}" 
+                                Value="true">
+                                <Setter Property="Button.IsEnabled" Value="false"/>
+                            </DataTrigger>
+                            <DataTrigger 
+                                Binding ="{Binding ElementName=TextBoxSpan, Path=(Validation.HasError)}" 
+                                Value="true">
+                                <Setter Property="Button.IsEnabled" Value="false"/>
+                            </DataTrigger>
+                            <DataTrigger 
+                                Binding ="{Binding ElementName=TextBoxSlope, Path=(Validation.HasError)}" 
+                                Value="true">
+                                <Setter Property="Button.IsEnabled" Value="false"/>
+                            </DataTrigger>
+                            <DataTrigger 
+                                Binding ="{Binding ElementName=TextBoxHeight, Path=(Validation.HasError)}" 
+                                Value="true">
+                                <Setter Property="Button.IsEnabled" Value="false"/>
+                            </DataTrigger>
+                            <DataTrigger 
+                                Binding ="{Binding ElementName=TextBoxPanelAmount, Path=(Validation.HasError)}" 
+                                Value="true">
+                                <Setter Property="Button.IsEnabled" Value="false"/>
+                            </DataTrigger>
+                            <DataTrigger 
+                                Binding ="{Binding ElementName=TextBoxLoad, Path=(Validation.HasError)}" 
+                                Value="true">
+                                <Setter Property="Button.IsEnabled" Value="false"/>
+                            </DataTrigger>
+                            <DataTrigger 
+                                Binding ="{Binding ElementName=TextBoxSpacing, Path=(Validation.HasError)}" 
+                                Value="true">
+                                <Setter Property="Button.IsEnabled" Value="false"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button Width="100" Margin="10,5" x:Name="CancelBtn" Click="CancelBtn_Click">Отмена</Button>
         </WrapPanel>
     </Grid>
 </Window>

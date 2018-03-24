@@ -4,17 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TrussMe.WPF.Dialogs"
+        xmlns:validation="clr-namespace:TrussMe.WPF.Validation"
         mc:Ignorable="d"
-        Title="AddProjectDialog" Height="220" Width="300">
+        Title="Добавить новый проект" Height="240" Width="350">
     <Window.Resources>
         <Style x:Key="TbErrorTemplateStyle" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
             <Setter Property="Validation.ErrorTemplate">
                 <Setter.Value>
                     <ControlTemplate>
                         <StackPanel>
-                            <Border BorderBrush="Red" BorderThickness="3">
-                                <AdornedElementPlaceholder></AdornedElementPlaceholder>
-                            </Border>
+                            <AdornedElementPlaceholder></AdornedElementPlaceholder>
                             <TextBlock Text="{Binding [0].ErrorContent}" Foreground="Red"></TextBlock>
                         </StackPanel>
                     </ControlTemplate>
@@ -32,39 +31,57 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel>
-            <Label Margin="0,5">Code</Label>
-            <Label Margin="0,30">Description</Label>
+            <Label Margin="0,5">Код</Label>
+            <Label Margin="0,30">Описание</Label>
         </StackPanel>
         <StackPanel Grid.Row="0" Grid.Column="1">
             <TextBox x:Name="TextBoxCode"
                      Height="30" 
                      Margin="5"
-                     Style="{StaticResource TbErrorTemplateStyle}" Text="{Binding Code}">
-                <!--<TextBox.Text>
+                     Style="{StaticResource TbErrorTemplateStyle}">
+                <TextBox.Text>
                         <Binding Path="Code" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
-                                <validationRules:ProjectCodeRule ValidatesOnTargetUpdated="True"/>
+                                <validation:NotEmptyValidation ValidatesOnTargetUpdated="True"/>
                             </Binding.ValidationRules>
                         </Binding>
-                    </TextBox.Text>-->
+                    </TextBox.Text>
             </TextBox>
-            <TextBox x:Name="TextBoxDescription" Height="70" Margin="5,20" ></TextBox>
+            <TextBox x:Name="TextBoxDescription" 
+                     Height="70" 
+                     Margin="5,20" 
+                     TextWrapping="Wrap"
+                     VerticalContentAlignment="Top"
+                     Style="{StaticResource TbErrorTemplateStyle}">
+                <TextBox.Text>
+                    <Binding Path="Description" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <validation:NotEmptyValidation ValidatesOnTargetUpdated="True"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
         </StackPanel>
         <StackPanel Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button x:Name="ButtonOk" Width="100"  Margin="5,0" Click="BtnOK_OnClick" Content="OK" IsDefault="True">
-                <!--<Button.Style>
-                        <Style >
-                            <Style.Triggers>
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                        <Style.Triggers>
                                 <DataTrigger 
                                  Binding ="{Binding ElementName=TextBoxCode, Path=(Validation.HasError)}" 
                                  Value="true">
                                     <Setter Property="Button.IsEnabled" Value="false"/>
                                 </DataTrigger>
-                            </Style.Triggers>
+                            <DataTrigger 
+                                Binding ="{Binding ElementName=TextBoxDescription, Path=(Validation.HasError)}" 
+                                Value="true">
+                                <Setter Property="Button.IsEnabled" Value="false"/>
+                            </DataTrigger>
+                        </Style.Triggers>
                         </Style>
-                    </Button.Style>-->
+                    </Button.Style>
             </Button>
-            <Button x:Name="ButtonCancel" Width="100" Margin="5,0"  Click="BtnCancel_OnClick" IsCancel="True">Cancel</Button>
+            <Button x:Name="ButtonCancel" Width="100" Margin="5,0"  Click="BtnCancel_OnClick" IsCancel="True">Отмена</Button>
         </StackPanel>
     </Grid>
 </Window>

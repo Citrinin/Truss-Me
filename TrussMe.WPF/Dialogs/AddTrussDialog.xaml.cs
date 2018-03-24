@@ -11,16 +11,21 @@ namespace TrussMe.WPF.Dialogs
     /// </summary>
     public partial class AddTrussDialog : Window
     {
-
+        public bool EditMode;
+        public bool CreateMode;
         public AddTrussDialog(IEnumerable<TypeOfLoad> loadList)
         {
             InitializeComponent();
             DataContext = this;
             LoadList = new List<TypeOfLoad>(loadList);
+
+            this.Title = "Добавить ферму";
         }
 
         public AddTrussDialog(ProjectTruss projectTrussToEdit, IEnumerable<TypeOfLoad> loadList):this(loadList)
         {
+            UnitForceCheckBox.IsEnabled = false;
+            this.Title = "Редактировать ферму";
             TextBoxName.IsEnabled = false;
             FavTruss.Span = projectTrussToEdit.Truss.Span;
             FavTruss.Slope = projectTrussToEdit.Truss.Slope;

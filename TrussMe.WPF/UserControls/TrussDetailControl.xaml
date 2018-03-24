@@ -6,8 +6,23 @@
              xmlns:local="clr-namespace:TrussMe.WPF.UserControls"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:validation="clr-namespace:TrussMe.WPF.Validation"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="1000" DataContext="{Binding Source={StaticResource Locator}, Path=Main}" Foreground="Black">
+    <UserControl.Resources>
+        <Style x:Key="TbErrorTemplateStyle" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <StackPanel>
+                            <AdornedElementPlaceholder></AdornedElementPlaceholder>
+                            <TextBlock Text="{Binding [0].ErrorContent}" Foreground="Red"></TextBlock>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" ></RowDefinition>
@@ -46,7 +61,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition MinWidth="300" Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="auto"></ColumnDefinition>
-                <ColumnDefinition MinWidth="210" Width="Auto"></ColumnDefinition>
+                <ColumnDefinition MinWidth="210" Width="520"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0" x:Name="grTruss">
                 <Grid.RowDefinitions>
@@ -135,47 +150,67 @@
                     </StackPanel>
                 </materialDesign:Card>
                 <materialDesign:Card Background="#FF001A8D" Foreground="White" Padding="5" VerticalAlignment="Stretch">
-                    <StackPanel>
+                    <StackPanel Width="250">
                         <TextBlock Margin="10,5" >Нагрузка</TextBlock>
                         <StackPanel Background="{DynamicResource MaterialDesignPaper}"  Height="200">
                             <TextBlock Foreground="Black" Text="{Binding SelectedTruss.LoadType, StringFormat=Тип нагрузки {0}}" Margin="0,0,0,10"/>
-                        <WrapPanel >
-                            <TextBlock Margin="5,0,0,0" Width="95" Foreground="Black">
+                            <WrapPanel Height="50">
+                                <TextBlock Margin="5,0,0,0" Width="70" Foreground="Black">
                                 <Run>На 1 м</Run>
                                 <Run Typography.Variants="Superscript">2</Run>
                                 <Run> :</Run>
-                            </TextBlock>
-                                <TextBox Foreground="Black" Width="100" Text="{Binding SelectedProjectTruss.Load, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SelectedTruss.UnitForce}" VerticalContentAlignment="Center" >
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="TextChanged">
-                                        <i:InvokeCommandAction
-                                            Command="{Binding LoadChangedCommand}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </TextBox>
+                                </TextBlock>
+                                <TextBox Foreground="Black" Width="100" VerticalContentAlignment="Center" 
+                                    Style="{StaticResource TbErrorTemplateStyle}">
+                                    <TextBox.Text>
+                                        <Binding  Path="SelectedProjectTruss.Load" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <validation:LoadValidation ValidatesOnTargetUpdated="True"/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="TextChanged">
+                                            <i:InvokeCommandAction
+                                                Command="{Binding LoadChangedCommand}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </TextBox>
                                 <TextBlock Margin="0,0,5,0" Foreground="Black">
                                 <Run>кгс/м</Run>
                                 <Run Typography.Variants="Superscript">2</Run>
                                 </TextBlock>
-                        </WrapPanel>
-                        <WrapPanel Margin="0,0,0,10">
-                            <Label Width="100" >Шаг ферм:</Label>
-                            <TextBox Foreground="Black" Width="100" Text="{Binding SelectedProjectTruss.TrussSpacing, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding SelectedTruss.UnitForce}" VerticalContentAlignment="Center" >
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="TextChanged">
-                                        <i:InvokeCommandAction
+                            </WrapPanel>
+                            <WrapPanel Margin="0,0,0,10" Height="50">
+                                <Label Width="70" >Шаг ферм:</Label>
+                                <TextBox Foreground="Black" Width="100"  VerticalContentAlignment="Center" 
+                                Style="{StaticResource TbErrorTemplateStyle}">
+                                    <TextBox.Text>
+                                        <Binding  Path="SelectedProjectTruss.TrussSpacing" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <validation:SpacingValidation ValidatesOnTargetUpdated="True"/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="TextChanged">
+                                            <i:InvokeCommandAction
                                             Command="{Binding LoadChangedCommand}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </TextBox>
-                            <Label>мм</Label>
-                        </WrapPanel>
-                    </StackPanel>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </TextBox>
+                                <Label>мм</Label>
+                            </WrapPanel>
+                            <WrapPanel Margin="0,0,0,10" Height="50" Visibility="{Binding ResultVisibility}">
+                                <Label Width="70" >Вес фермы:</Label>
+                                <TextBlock Foreground="Black" Width="100" Text="{Binding TrussWeight}">
+                                </TextBlock>
+                                <Label>т</Label>
+                            </WrapPanel>
                         </StackPanel>
+                    </StackPanel>
                 </materialDesign:Card>
             </StackPanel>
-
-
         </Grid>
         <GridSplitter Grid.Row="2" Height="4" HorizontalAlignment="Stretch" VerticalAlignment="Center" ShowsPreview="False" Background="DarkGray"/>
         <DataGrid Grid.Row="3" 
