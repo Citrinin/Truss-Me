@@ -118,12 +118,12 @@
                     </TextBox>
             </WrapPanel>
             <WrapPanel Height="50">
-                <TextBlock TextWrapping="WrapWithOverflow" Width="100" Padding="5" IsEnabled="{Binding CreateMode}">Единичные усилия</TextBlock>
+                <TextBlock TextWrapping="WrapWithOverflow" Width="100" Padding="5">Единичные усилия</TextBlock>
                 <CheckBox Width="100"
                           Margin="0,5"
                           x:Name="UnitForceCheckBox"
                           IsChecked="False"
-                          IsEnabled="True">Да</CheckBox>
+                          >Да</CheckBox>
             </WrapPanel>
             <WrapPanel Height="50">
                 <Label Width="100">Тип нагрузки</Label>

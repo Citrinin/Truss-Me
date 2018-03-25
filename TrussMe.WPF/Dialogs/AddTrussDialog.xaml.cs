@@ -18,7 +18,7 @@ namespace TrussMe.WPF.Dialogs
             InitializeComponent();
             DataContext = this;
             LoadList = new List<TypeOfLoad>(loadList);
-
+            UnitForceCheckBox.IsEnabled = true;
             this.Title = "Добавить ферму";
         }
 
@@ -34,6 +34,14 @@ namespace TrussMe.WPF.Dialogs
             LoadListCB.SelectedItem = LoadList.First(x => x.LoadId == projectTrussToEdit.Truss.LoadId);
             UnitForceCheckBox.IsChecked = projectTrussToEdit.Truss.UnitForce;
             NewProjectTruss = projectTrussToEdit;
+            if (projectTrussToEdit.Truss.UnitForce)
+            {
+                TextBoxSpan.IsEnabled = false;
+                TextBoxSlope.IsEnabled = false;
+                TextBoxHeight.IsEnabled = false;
+                TextBoxPanelAmount.IsEnabled = false;
+                LoadListCB.IsEnabled = false;
+            }
         }
 
         public Truss NewTruss { get; set; }

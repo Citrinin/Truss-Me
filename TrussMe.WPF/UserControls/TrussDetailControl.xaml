@@ -203,7 +203,7 @@
                             </WrapPanel>
                             <WrapPanel Margin="0,0,0,10" Height="50" Visibility="{Binding ResultVisibility}">
                                 <Label Width="70" >Вес фермы:</Label>
-                                <TextBlock Foreground="Black" Width="100" Text="{Binding TrussWeight}">
+                                <TextBlock Foreground="Black" Width="100" Text="{Binding TrussWeight}" VerticalAlignment="Center">
                                 </TextBlock>
                                 <Label>т</Label>
                             </WrapPanel>
